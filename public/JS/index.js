@@ -9,15 +9,16 @@ const bocina = document.getElementById('bocina');
 const operadores = ['+', '-', '*', '/', '^'];
 
 const prioridad = {
-    '+': 1,
-    '-': 1,
-    '*': 2,
-    '/': 2,
-    '^': 3
+    '=': 1,
+    '+': 2,
+    '-': 2,
+    '*': 3,
+    '/': 3,
+    '^': 4
 };
 
 const obtenerTokens = (texto) => {
-    const tokens = texto.match(/[a-zA-Z][a-zA-Z0-9]*|\d+(?:\.\d+)?|[()+\-*/^]/g);
+    const tokens = texto.match(/[a-zA-Z][a-zA-Z0-9]*|\d+(?:\.\d+)?|[()+\-*/^=]/g);
 
     if (!tokens || tokens.join('') !== texto.replace(/\s/g, '')) {
         throw new Error("Facor de revisar la expresion");
@@ -31,7 +32,15 @@ const convertirPosfija = (tokens) => {
     const pila = [];
     let esperarOperando = true;
 
-    tokens.forEach(token => {
+    let variableAsignacion = null;
+    let tokensOriginales = [...tokens];
+
+    if (tokensOriginales.length >= 3 && /^[a-zA-Z]/.test(tokensOriginales[0]) && tokensOriginales[1] === '=') {
+        variableAsignacion = tokensOriginales[0];
+        tokensOriginales = tokensOriginales.slice(2);
+    }
+
+    tokensOriginales.forEach(token => {
         if (/^[a-zA-Z]|\d/.test(token)) {
             if (!esperarOperando) {
                 throw new Error("Le falta un operador entre los elemntos");
@@ -90,6 +99,11 @@ const convertirPosfija = (tokens) => {
         salida.push(operador);
     }
 
+    if (variableAsignacion) {
+        salida.push(variableAsignacion);
+        salida.push('=');
+    }
+
     return salida;
 };
 
@@ -103,6 +117,34 @@ const generarTablas = (posfija) => {
             pila.push({
                 triplo: token,
                 cuadruplo: token
+            });
+        } else if (token === '=') {
+            if (pila.length < 2) {
+                throw new Error("Operacion no valida");
+            }
+
+            const derecho = pila.pop();
+            const izquierdo = pila.pop();
+            const numero = triplos.length;
+
+            triplos.push({
+                numero,
+                operador: token,
+                operando1: izquierdo.triplo,
+                operando2: '-'
+            });
+
+            cuadruplos.push({
+                numero,
+                operador: token,
+                operando1: izquierdo.cuadruplo,
+                operando2: '-',
+                resultado: derecho.cuadruplo
+            });
+
+            pila.push({
+                triplo: `(${numero})`,
+                cuadruplo: derecho.cuadruplo
             });
         } else {
             if (pila.length < 2) {
@@ -171,15 +213,43 @@ const mostrarTablas = (datos) => {
 
 maquinaDeOperaciones.addEventListener('click', () => {
     try {
-        const texto = expresion.value.trim();
+        let texto = expresion.value.trim();
 
         if (texto === '') {
             throw new Error("Ingresar una operacion matematica");
         }
 
+        let variableAsignacion = null;
+        const match = texto.match(/^([a-zA-Z][a-zA-Z0-9]*)\s*=\s*(.*)$/);
+        if (match) {
+            variableAsignacion = match[1];
+            texto = match[2]; 
+        }
+
         const tokens = obtenerTokens(texto);
         const posfija = convertirPosfija(tokens);
         const datos = generarTablas(posfija);
+
+        if (variableAsignacion) {
+            const numero = datos.triplos.length;
+            const ultimoTriplo = `(${numero - 1})`;
+            const ultimoCuadruplo = datos.cuadruplos[datos.cuadruplos.length - 1].resultado;
+
+            datos.triplos.push({
+                numero,
+                operador: '=',
+                operando1: ultimoTriplo,
+                operando2: '-'
+            });
+
+            datos.cuadruplos.push({
+                numero,
+                operador: '=',
+                operando1: ultimoCuadruplo,
+                operando2: '-',
+                resultado: variableAsignacion
+            });
+        }
 
         mostrarTablas(datos);
         bocina.innerHTML = '<div class="alert alert-success">operacion procesada.</div>';
