@@ -1,0 +1,73 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Triplos y Cuádruplos</title>
+    <link rel="stylesheet" href="./public/CSS/boostrao.css">
+    <link rel="stylesheet" href="./public/JS/boostrap.js">
+</head>
+<body class="bg-light">
+
+    <div class="container py-5">
+        <h1 class="text-center mb-4">Triplos y Cuadruplos</h1>
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <label for="expresion" class="form-label">Operacion matematica</label>
+                <input type="text" id="expresion" class="form-control"
+                    placeholder="a+b*c">
+
+                <div class="mt-3">
+                    <button id="maquinaDeOperaciones" class="btn btn-primary">Procesar</button>
+                    <button id="barredora" class="btn btn-secondary">Limpiar</button>
+                </div>
+
+                <div id="bocina" class="mt-3"></div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h2 class="h4">Tabla de Triplos</h2>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped text-center">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>N.º</th>
+                                <th>Operador</th>
+                                <th>Operando 1</th>
+                                <th>Operando 2</th>
+                            </tr>
+                        </thead>
+                        <tbody id="triplete"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h2 class="h4">Tabla de CuAdruplos</h2>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped text-center">
+                        <thead class="table-secondary">
+                            <tr>
+                                <th>N.º</th>
+                                <th>Operador</th>
+                                <th>Operando 1</th>
+                                <th>Operando 2</th>
+                                <th>Resultado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cuarteto"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./public/JS/index.js"></script>
+</body>
+</html>
