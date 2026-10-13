@@ -1,27 +1,25 @@
-
 const expresion = document.getElementById('expresion');
 const maquinaDeOperaciones = document.getElementById('maquinaDeOperaciones');
 const barredora = document.getElementById('barredora');
 const triplete = document.getElementById('triplete');
 const cuarteto = document.getElementById('cuarteto');
-const bocina = document.getElementById('bocina');
+const resultadoOperacion = document.getElementById('resultadoOperacion');
 
 const operadores = ['+', '-', '*', '/', '^'];
 
 const prioridad = {
-    '=': 1,
-    '+': 2,
-    '-': 2,
-    '*': 3,
-    '/': 3,
-    '^': 4
+    '+': 1,
+    '-': 1,
+    '*': 2,
+    '/': 2,
+    '^': 3
 };
 
 const obtenerTokens = (texto) => {
-    const tokens = texto.match(/[a-zA-Z][a-zA-Z0-9]*|\d+(?:\.\d+)?|[()+\-*/^=]/g);
+    const tokens = texto.match(/[a-zA-Z][a-zA-Z0-9]*|\d+(?:\.\d+)?|[()+\-*/^]/g);
 
     if (!tokens || tokens.join('') !== texto.replace(/\s/g, '')) {
-        throw new Error("Facor de revisar la expresion");
+        throw new Error('Favor de revisar la expresion');
     }
 
     return tokens;
@@ -32,51 +30,54 @@ const convertirPosfija = (tokens) => {
     const pila = [];
     let esperarOperando = true;
 
-    let variableAsignacion = null;
-    let tokensOriginales = [...tokens];
-
-    if (tokensOriginales.length >= 3 && /^[a-zA-Z]/.test(tokensOriginales[0]) && tokensOriginales[1] === '=') {
-        variableAsignacion = tokensOriginales[0];
-        tokensOriginales = tokensOriginales.slice(2);
-    }
-
-    tokensOriginales.forEach(token => {
-        if (/^[a-zA-Z]|\d/.test(token)) {
+    tokens.forEach(token => {
+        if (/^[a-zA-Z][a-zA-Z0-9]*$|^\d+(?:\.\d+)?$/.test(token)) {
             if (!esperarOperando) {
-                throw new Error("Le falta un operador entre los elemntos");
+                throw new Error('Falta un operador entre los elementos.');
             }
 
             salida.push(token);
             esperarOperando = false;
+
         } else if (token === '(') {
             if (!esperarOperando) {
-                throw new Error('Falta un operador antes del parentesis');
+                throw new Error('Falta un operador antes del paréntesis.');
             }
 
             pila.push(token);
+
         } else if (token === ')') {
             if (esperarOperando) {
-                throw new Error('tiene un parentesis vacio');
+                throw new Error('El parentesis esta vacio o la expresión está incompleta');
             }
 
-            while (pila.length && pila[pila.length - 1] !== '(') {
+            while (pila.length > 0 && pila[pila.length - 1] !== '(') {
                 salida.push(pila.pop());
             }
 
-            if (!pila.length) {
-                throw new Error('tiene un parentesis extra o le falta uno de cierre');
+            if (pila.length === 0) {
+                throw new Error('Los parentesis no estaan equilibrados');
             }
 
             pila.pop();
             esperarOperando = false;
+
         } else if (operadores.includes(token)) {
             if (esperarOperando) {
-                throw new Error('un operador no esta en el lugar correcto');
+                throw new Error('El operador esta en una posicion incorrecta');
             }
 
-            while (pila.length && operadores.includes(pila[pila.length - 1]) &&
-                (prioridad[pila[pila.length - 1]] > prioridad[token] ||
-                (prioridad[pila[pila.length - 1]] === prioridad[token] && token !== '^'))) {
+            while (
+                pila.length > 0 &&
+                operadores.includes(pila[pila.length - 1]) &&
+                (
+                    prioridad[pila[pila.length - 1]] > prioridad[token] ||
+                    (
+                        prioridad[pila[pila.length - 1]] === prioridad[token] &&
+                        token !== '^'
+                    )
+                )
+            ) {
                 salida.push(pila.pop());
             }
 
@@ -86,25 +87,42 @@ const convertirPosfija = (tokens) => {
     });
 
     if (esperarOperando) {
-        throw new Error('operacion incompleta');
+        throw new Error('La operación esta incompleta.');
     }
 
-    while (pila.length) {
+    while (pila.length > 0) {
         const operador = pila.pop();
 
         if (operador === '(') {
-            throw new Error('favor de revisar parentesis');
+            throw new Error('Favor de revisar los parentesis');
         }
 
         salida.push(operador);
     }
 
-    if (variableAsignacion) {
-        salida.push(variableAsignacion);
-        salida.push('=');
+    return salida;
+};
+
+const calcular = (operador, a, b) => {
+    if (a === null || b === null) {
+        return null;
     }
 
-    return salida;
+    if (operador === '+') {
+        return a + b;
+    } else if (operador === '-') {
+        return a - b;
+    } else if (operador === '*') {
+        return a * b;
+    } else if (operador === '/') {
+        if (b === 0) {
+            throw new Error('No se puede dividir entre cero');
+        }
+
+        return a / b;
+    } else if (operador === '^') {
+        return a ** b;
+    }
 };
 
 const generarTablas = (posfija) => {
@@ -114,57 +132,44 @@ const generarTablas = (posfija) => {
 
     posfija.forEach(token => {
         if (!operadores.includes(token)) {
+            let valor = null;
+
+            if (!isNaN(token)) {
+                valor = Number(token);
+            }
+
             pila.push({
                 triplo: token,
-                cuadruplo: token
-            });
-        } else if (token === '=') {
-            if (pila.length < 2) {
-                throw new Error("Operacion no valida");
-            }
-
-            const derecho = pila.pop();
-            const izquierdo = pila.pop();
-            const numero = triplos.length;
-
-            triplos.push({
-                numero,
-                operador: token,
-                operando1: izquierdo.triplo,
-                operando2: '-'
+                cuadruplo: token,
+                valor: valor
             });
 
-            cuadruplos.push({
-                numero,
-                operador: token,
-                operando1: izquierdo.cuadruplo,
-                operando2: '-',
-                resultado: derecho.cuadruplo
-            });
-
-            pila.push({
-                triplo: `(${numero})`,
-                cuadruplo: derecho.cuadruplo
-            });
         } else {
             if (pila.length < 2) {
-                throw new Error("Operacion no valida");
+                throw new Error('La expresión no es válida.');
             }
 
             const derecho = pila.pop();
             const izquierdo = pila.pop();
+
             const numero = triplos.length;
-            const temporal = `T${numero + 1}`;
+            const temporal = 'T' + (numero + 1);
+
+            const valor = calcular(
+                token,
+                izquierdo.valor,
+                derecho.valor
+            );
 
             triplos.push({
-                numero,
+                numero: numero,
                 operador: token,
                 operando1: izquierdo.triplo,
                 operando2: derecho.triplo
             });
 
             cuadruplos.push({
-                numero,
+                numero: numero,
                 operador: token,
                 operando1: izquierdo.cuadruplo,
                 operando2: derecho.cuadruplo,
@@ -172,17 +177,24 @@ const generarTablas = (posfija) => {
             });
 
             pila.push({
-                triplo: `(${numero})`,
-                cuadruplo: temporal
+                triplo: '(' + numero + ')',
+                cuadruplo: temporal,
+                valor: valor
             });
         }
     });
 
     if (pila.length !== 1) {
-        throw new Error("Operacion no valida, favor de revisar");
+        throw new Error('La expresin no es válida');
     }
 
-    return { triplos, cuadruplos };
+    return {
+        triplos: triplos,
+        cuadruplos: cuadruplos,
+        resultado: pila[0].valor,
+        valorFinal: pila[0].cuadruplo,
+        triploFinal: pila[0].triplo
+    };
 };
 
 const mostrarTablas = (datos) => {
@@ -210,60 +222,102 @@ const mostrarTablas = (datos) => {
             </tr>`;
     });
 };
-
 maquinaDeOperaciones.addEventListener('click', () => {
     try {
-        let texto = expresion.value.trim();
+        const texto = expresion.value.trim();
 
         if (texto === '') {
-            throw new Error("Ingresar una operacion matematica");
+            throw new Error('Ingresa una operación matemática.');
         }
 
-        let variableAsignacion = null;
-        const match = texto.match(/^([a-zA-Z][a-zA-Z0-9]*)\s*=\s*(.*)$/);
-        if (match) {
-            variableAsignacion = match[1];
-            texto = match[2]; 
+        const asignacion = texto.match(
+            /^([a-zA-Z][a-zA-Z0-9]*)\s*=\s*(.+)$/
+        );
+
+        let variable = null;
+        let operacion = texto;
+
+        if (asignacion) {
+            variable = asignacion[1];
+            operacion = asignacion[2];
         }
 
-        const tokens = obtenerTokens(texto);
+        const tokens = obtenerTokens(operacion);
         const posfija = convertirPosfija(tokens);
         const datos = generarTablas(posfija);
 
-        if (variableAsignacion) {
+        if (variable !== null) {
             const numero = datos.triplos.length;
-            const ultimoTriplo = `(${numero - 1})`;
-            const ultimoCuadruplo = datos.cuadruplos[datos.cuadruplos.length - 1].resultado;
 
             datos.triplos.push({
-                numero,
+                numero: numero,
                 operador: '=',
-                operando1: ultimoTriplo,
+                operando1: datos.triploFinal,
                 operando2: '-'
             });
 
             datos.cuadruplos.push({
-                numero,
+                numero: numero,
                 operador: '=',
-                operando1: ultimoCuadruplo,
+                operando1: datos.valorFinal,
                 operando2: '-',
-                resultado: variableAsignacion
+                resultado: variable
             });
         }
 
         mostrarTablas(datos);
-        bocina.innerHTML = '<div class="alert alert-success">operacion procesada.</div>';
+
+        if (datos.resultado !== null) {
+            resultadoOperacion.innerHTML = datos.resultado;
+        } else {
+            resultadoOperacion.innerHTML =
+                'No se puede calcular: faltan valores para las variables.';
+        }
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Operacion realizada',
+            text: 'Las tablas y el resultado están listos.',
+            timer: 1800,
+            showConfirmButton: false
+        });
+
     } catch (error) {
         triplete.innerHTML = '';
         cuarteto.innerHTML = '';
-        bocina.innerHTML = `<div class="alert alert-danger">${error.message}</div>`;
+        resultadoOperacion.innerHTML = 'Sin resultado';
+
+        Swal.fire({
+            icon: 'error',
+            title: '¡Hay un problema!',
+            text: error.message
+        });
     }
 });
 
 barredora.addEventListener('click', () => {
-    expresion.value = '';
-    triplete.innerHTML = '';
-    cuarteto.innerHTML = '';
-    bocina.innerHTML = '';
-    expresion.focus();
+    Swal.fire({
+        icon: 'question',
+        title: '¿Borrar expresion?',
+        text: 'Se eliminan la expresin, el resultado y las tablas',
+        showCancelButton: true,
+        confirmButtonText: 'limpia',
+        cancelButtonText: 'cancelar'
+    }).then((respuesta) => {
+        if (respuesta.isConfirmed) {
+            expresion.value = '';
+            triplete.innerHTML = '';
+            cuarteto.innerHTML = '';
+            resultadoOperacion.innerHTML = 'Esperando una operacion';
+
+            expresion.focus();
+
+            Swal.fire({
+                icon: 'success',
+                title: '¡Todo limpio!',
+                timer: 1200,
+                showConfirmButton: false
+            });
+        }
+    });
 });

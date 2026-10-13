@@ -1,73 +1,115 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Triplos y Cuádruplos</title>
+
     <link rel="stylesheet" href="./public/CSS/boostrao.css">
-    <link rel="stylesheet" href="./public/JS/boostrap.js">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="./public/CSS/style.css">
 </head>
-<body class="bg-light">
+<body>
 
-    <div class="container py-5">
-        <h1 class="text-center mb-4">Triplos y Cuadruplos</h1>
+    <div class="container proyecto">
 
-        <div class="card shadow-sm mb-4">
-            <div class="card-body">
-                <label for="expresion" class="form-label">Operacion matematica</label>
-                <input type="text" id="expresion" class="form-control"
-                    placeholder="a+b*c">
+        <header class="encabezado">
+            <h1>
+                <i class="fa-solid fa-calculator"></i>
+                Triplos y Cuádruplos
+            </h1>
+            <p>Tablas de triplos</p>
+        </header>
 
-                <div class="mt-3">
-                    <button id="maquinaDeOperaciones" class="btn btn-primary">Procesar</button>
-                    <button id="barredora" class="btn btn-secondary">Limpiar</button>
-                </div>
+        <div class="panel">
+            <h2>
+                <i class="fa-solid fa-code"></i>
+                expresion matematica
+            </h2>
 
-                <div id="bocina" class="mt-3"></div>
+            <label for="expresion" class="form-label">
+                Ingresa la operacion
+            </label>
+
+            <input type="text" id="expresion" class="form-control"
+                placeholder="Ejemplo: 2+3*6">
+
+            <div class="acciones">
+                <button id="maquinaDeOperaciones" class="btn procesar">
+                    <i class="fa-solid fa-gears"></i>
+                    Procesar
+                </button>
+
+                <button id="barredora" class="btn limpiar">
+                    <i class="fa-solid fa-broom"></i>
+                    Limpiar
+                </button>
+            </div>
+
+            <div id="bocina"></div>
+        </div>
+        <div class="panel">
+            <h2>
+                <i class="fa-solid fa-square-root-variable"></i>
+                resultado
+            </h2>
+
+            <div id="resultadoOperacion" class="resultado">
+                ---
             </div>
         </div>
 
-        <div class="card shadow-sm mb-4">
-            <div class="card-body">
-                <h2 class="h4">Tabla de Triplos</h2>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped text-center">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>N.º</th>
-                                <th>Operador</th>
-                                <th>Operando 1</th>
-                                <th>Operando 2</th>
-                            </tr>
-                        </thead>
-                        <tbody id="triplete"></tbody>
-                    </table>
-                </div>
+        <div class="panel">
+            <h2>
+                <i class="fa-solid fa-list-ol"></i>
+                Tabla de Triplos
+            </h2>
+
+            <div class="table-responsive">
+                <table class="table tabla-datos text-center">
+                    <thead>
+                        <tr>
+                            <th>N.º</th>
+                            <th>Operador</th>
+                            <th>Operando 1</th>
+                            <th>Operando 2</th>
+                        </tr>
+                    </thead>
+                    <tbody id="triplete"></tbody>
+                </table>
             </div>
         </div>
 
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <h2 class="h4">Tabla de CuAdruplos</h2>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped text-center">
-                        <thead class="table-secondary">
-                            <tr>
-                                <th>N.º</th>
-                                <th>Operador</th>
-                                <th>Operando 1</th>
-                                <th>Operando 2</th>
-                                <th>Resultado</th>
-                            </tr>
-                        </thead>
-                        <tbody id="cuarteto"></tbody>
-                    </table>
-                </div>
+        <div class="panel">
+            <h2>
+                <i class="fa-solid fa-table-list"></i>
+                Tabla de Cuádruplos
+            </h2>
+
+            <div class="table-responsive">
+                <table class="table tabla-datos text-center">
+                    <thead>
+                        <tr>
+                            <th>N.º</th>
+                            <th>Operador</th>
+                            <th>Operando 1</th>
+                            <th>Operando 2</th>
+                            <th>Resultado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuarteto"></tbody>
+                </table>
             </div>
         </div>
+
+        <footer class="pie">
+            <i class="fa-solid fa-laptop-code"></i>
+        </footer>
+
     </div>
 
-    <script src="./public/JS/index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="module" src="./public/JS/index.js"></script>
+
 </body>
 </html>

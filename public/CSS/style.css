@@ -1,0 +1,294 @@
+/* Configuración general */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #303846;
+    background-color: #eef2f7;
+    background-image: linear-gradient(
+        rgba(238, 242, 247, 0.88),
+        rgba(238, 242, 247, 0.94)
+    ), url("../Img/ciudad.jpg");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.proyecto {
+    max-width: 1100px;
+    padding-top: 35px;
+    padding-bottom: 25px;
+}
+
+/* Encabezado */
+.encabezado {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.icono-principal {
+    width: 58px;
+    height: 58px;
+    margin: 0 auto 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #4169e1;
+    color: white;
+    border-radius: 14px;
+    font-size: 25px;
+    box-shadow: 0 4px 12px rgba(65, 105, 225, 0.2);
+}
+
+.encabezado h1 {
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #263750;
+}
+
+.encabezado p {
+    color: #727d8d;
+    margin-bottom: 0;
+    font-size: 14px;
+}
+
+/* Paneles */
+.panel {
+    background-color: rgba(255, 255, 255, 0.96);
+    border-radius: 10px;
+    margin-bottom: 25px;
+    padding: 24px;
+    box-shadow: 0 4px 15px rgba(35, 52, 80, 0.08);
+    border: 1px solid #e3e8f0;
+}
+
+.titulo-panel {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    color: #4169e1;
+}
+
+.titulo-panel i {
+    font-size: 20px;
+}
+
+.titulo-panel h2 {
+    font-size: 19px;
+    font-weight: bold;
+    margin: 0;
+    color: #303e55;
+}
+
+/* Entrada de expresión */
+.form-label {
+    font-weight: bold;
+    font-size: 14px;
+    color: #4d5869;
+}
+
+.entrada {
+    display: flex;
+    align-items: center;
+    border: 1px solid #d7deea;
+    border-radius: 7px;
+    padding-left: 13px;
+    background-color: white;
+}
+
+.entrada i {
+    color: #71809a;
+}
+
+.entrada .form-control {
+    border: none;
+    box-shadow: none;
+    padding: 12px;
+    background: transparent;
+}
+
+.entrada:focus-within {
+    border-color: #4169e1;
+    box-shadow: 0 0 0 3px rgba(65, 105, 225, 0.12);
+}
+
+.acciones {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.acciones .btn {
+    padding: 10px 17px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.procesar {
+    background-color: #4169e1;
+    color: white;
+}
+
+.procesar:hover {
+    background-color: #3154c5;
+    color: white;
+    transform: translateY(-1px);
+}
+
+.limpiar {
+    background-color: #edf0f5;
+    color: #4d5869;
+    border: 1px solid #dce2eb;
+}
+
+.limpiar:hover {
+    background-color: #dfe5ee;
+    color: #263750;
+}
+
+.titulo-tabla {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 22px;
+}
+
+.titulo-icono {
+    width: 43px;
+    height: 43px;
+    border-radius: 9px;
+    background-color: #e9efff;
+    color: #4169e1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 19px;
+}
+
+.titulo-tabla h2 {
+    font-size: 19px;
+    font-weight: bold;
+    margin: 0 0 5px;
+    color: #303e55;
+}
+
+.titulo-tabla p {
+    font-size: 13px;
+    margin: 0;
+    color: #8490a1;
+}
+
+/* Tablas */
+.tabla-datos {
+    margin-bottom: 0;
+    border-color: #e1e6ef;
+    vertical-align: middle;
+    font-size: 14px;
+}
+
+.tabla-datos thead th {
+    background-color: #4169e1;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    padding: 14px 10px;
+    border-color: #4169e1;
+    white-space: nowrap;
+}
+
+.tabla-datos tbody td {
+    padding: 14px 10px;
+    color: #505b6c;
+    background-color: rgba(255, 255, 255, 0.95);
+    border-color: #e8ecf3;
+}
+
+.tabla-datos tbody tr:hover td {
+    background-color: #f0f4ff;
+}
+.tabla-datos tbody td:first-child {
+    font-weight: bold;
+    color: #4169e1;
+}
+
+.tabla-datos tbody td:last-child {
+    overflow-wrap: anywhere;
+}
+
+.pie {
+    text-align: center;
+    padding: 10px;
+    color: #8791a0;
+    font-size: 13px;
+}
+
+.pie i {
+    margin-right: 5px;
+    color: #4169e1;
+}
+
+@media (max-width: 576px) {
+    .proyecto {
+        padding-top: 22px;
+        padding-bottom: 15px;
+    }
+
+    .encabezado h1 {
+        font-size: 24px;
+    }
+
+    .panel {
+        padding: 16px;
+        margin-bottom: 18px;
+    }
+
+    .acciones {
+        flex-direction: column;
+    }
+
+    .acciones .btn {
+        width: 100%;
+    }
+
+    .titulo-tabla h2 {
+        font-size: 17px;
+    }
+
+    .tabla-datos {
+        font-size: 12px;
+    }
+
+    .tabla-datos thead th,
+    .tabla-datos tbody td {
+        padding: 10px 8px;
+    }
+    .resultado {
+    background-color: #f0f4ff;
+    border: 1px solid #dce5ff;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    color: #4169e1;
+    overflow-wrap: anywhere;
+    }
+
+    .resultado small {
+    display: block;
+    font-size: 13px;
+    font-weight: normal;
+    color: #727d8d;
+    margin-bottom: 8px;
+    }
+}
